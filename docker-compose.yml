@@ -7,7 +7,7 @@ services:
     env_file:
       - ./backend/.env
     ports:
-      - "4000:4000"
+      - "8003:8003"
     depends_on:
       postgres:
         condition: service_healthy
