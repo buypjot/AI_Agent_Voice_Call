@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 
 const app = express();
-const port = Number(process.env.PORT || 4000);
+const port = Number(process.env.PORT || 8003);
 
 app.disable('x-powered-by');
 app.use(helmet());
