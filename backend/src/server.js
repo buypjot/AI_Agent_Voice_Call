@@ -30,6 +30,27 @@ app.get('/api/voice/config-status', (_req, res) => {
   });
 });
 
+// Twilio webhook used when an outbound/inbound call connects.
+// The response tells Twilio to open a bidirectional Media Stream.
+app.post('/api/voice/twiml', (_req, res) => {
+  const publicBaseUrl = process.env.PUBLIC_BASE_URL;
+  if (!publicBaseUrl) {
+    return res.status(503).type('text/plain').send('PUBLIC_BASE_URL is not configured');
+  }
+
+  const streamUrl = `${publicBaseUrl.replace(/^http/i, 'ws')}/ws/voice`;
+  const twiml = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<Response>',
+    '  <Connect>',
+    `    <Stream url="${streamUrl}" />`,
+    '  </Connect>',
+    '</Response>'
+  ].join('\\n');
+
+  return res.type('text/xml').send(twiml);
+});
+
 app.use((err, _req, res, _next) => {
   console.error(err);
   res.status(500).json({ error: 'Internal server error' });
